@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres
+    environment:
+      # TODO: Move this to a secret for prod and .env file for local development
+      POSTGRES_USER: eunice
+      POSTGRES_PASSWORD: eunice
+      POSTGRES_DB: eunice
+    ports:
+      - 5433:5432
+    container_name: eunice_challenge_db
+    networks:
+     - eunice_challenge

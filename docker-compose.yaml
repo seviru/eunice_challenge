@@ -1,0 +1,4 @@
+networks:
+  eunice_challenge:
+    driver: bridge
+    name: eunice_challenge

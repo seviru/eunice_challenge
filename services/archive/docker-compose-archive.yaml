@@ -1,0 +1,14 @@
+services:
+  archive:
+    build:
+      context: ./services/archive
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - eunice_challenge
+    volumes:
+      - ./services/archive:/archive
+    container_name: eunice_challenge_archive
