@@ -4,3 +4,5 @@ down:
 	docker-compose -f docker-compose.yaml -f services/db/docker-compose-db.yaml -f services/parser/docker-compose-parser.yaml down
 full_down:
 	docker-compose -f docker-compose.yaml -f services/db/docker-compose-db.yaml -f services/parser/docker-compose-parser.yaml down --rmi all
+db:
+	docker-compose -f docker-compose.yaml -f services/db/docker-compose-db.yaml up -d

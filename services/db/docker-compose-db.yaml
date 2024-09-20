@@ -1,6 +1,8 @@
 services:
   db:
     image: postgres
+    volumes:
+      - ./services/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       # TODO: Move this to a secret for prod and .env file for local development
       POSTGRES_USER: eunice
