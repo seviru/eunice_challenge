@@ -9,3 +9,10 @@ of belonging to the archive service, just for the matter of simplicity.
 - I added the table creation as an init script for the sake of simplicity. If this was a real application looking to scale,
 I would use something like alembic to separate between DDLs and DMLs, while also having the database version control by
 having the up revisions and down revisions.
+- On the coindesk pages retriever, I decided to go with the one that retrieves the articles following the current structure
+of the page by date, since ensuring the opposite is pretty heavyweight (parse all links and order them). If in the future
+this changes, we can just change this part of the code since the retrieval is not coupled with anything else.
+- Also, for the sake of simplicity, I decided to only retrieve english articles.
+- Also, since I caught the API call to retrieve the news, I think It's more sustainable to crawl the direct API call than
+to do the content returned. Sadly, when I want the full information of the new (like the content) I have to acces the HTML
+since It is what is returned from the backend (or at least I didn't catch the API call).

@@ -7,4 +7,8 @@ services:
       - db
     networks:
       - eunice_challenge
+    volumes:
+      - ./services/parser:/parser
+    environment:
+      - PYTHONPATH=/parser
     container_name: eunice_challenge_parser
