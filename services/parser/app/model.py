@@ -1,10 +1,10 @@
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, HttpUrl
 
 
 class BasePage(BaseModel):
-    id: int
     title: str
     author: str
     published_at: datetime

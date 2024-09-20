@@ -1,0 +1,2 @@
+from app.extractor.extractor_interface import PageExtractorInterface
+from app.extractor.coindesk_extractor import CoindeskExtractor
