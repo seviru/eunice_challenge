@@ -6,10 +6,6 @@ authors = ["Sebastian Vieites"]
 
 [tool.poetry.dependencies]
 python = "^3.12.4"
-
-# Add here your dependencies
-# For example:
-# pandas = "^1.2.4"
 typer = "^0.12.5"
 beautifulsoup4 = "^4.12.3"
 pydantic = "^2.9.2"
