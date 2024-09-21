@@ -16,3 +16,6 @@ this changes, we can just change this part of the code since the retrieval is no
 - Also, since I caught the API call to retrieve the news, I think It's more sustainable to crawl the direct API call than
 to do the content returned. Sadly, when I want the full information of the new (like the content) I have to acces the HTML
 since It is what is returned from the backend (or at least I didn't catch the API call).
+- Even though I could have used something like SQLAlchemy for handling the database models, and more in depth building
+with psycopg2 to make service-wide connector and so on, since I'm only will be having 3 touch points to the database
+(write the article, retrieve a particular one and retrieve all) I decided for the sake of simplicity just do It case-based.

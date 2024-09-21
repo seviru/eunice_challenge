@@ -1,0 +1,1 @@
+from app.storer.storer_interface import PageStorerInterface
