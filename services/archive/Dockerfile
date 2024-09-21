@@ -18,7 +18,9 @@ RUN export POETRY_REQUESTS_TIMEOUT=100
 
 RUN poetry install -n --no-root
 
-WORKDIR /parser
-COPY . /parser
+WORKDIR /archive
+COPY . /archive
 
-CMD ["bash", "-c", "sleep infinity"]
+EXPOSE 8000
+#CMD ["bash", "-c", "sleep infinity"]
+CMD ["uvicorn", "app:api", "--host", "0.0.0.0", "--port", "8080"]

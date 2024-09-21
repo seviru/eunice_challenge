@@ -22,5 +22,10 @@ with psycopg2 to make service-wide connector and so on, since I'm only will be h
 - For the given moment, I've decided to skip all concurrency handling with locks and so on, since It adds complexity and
 I don't see much of a point for this use case. Also, if I went with my ideal approach which would be throwing jobs in a
 queue that happen sequentially I feel like a lot of these issues wouldn't be even a concern.
-- Currently the logger writes to a file in case you want to check It out for reviewing this exerciese. For a prod environment
+- Currently the logger writes to a file in case you want to check It out for reviewing this exercise. For a prod environment
 I would use rotating files, or just plain skip this if we have our logs stored by some commercial app like Datadog or so.
+- Some things like the logger could be a common custom library that all my services use, but again I feel like that is out
+of scope for this exercise.
+- A lot of the things that I've hardcoded on the articles repository like the connection to the database and so on It would
+typically go into a different class that all repositories that connect to the postgres database will inherit from, but since
+for this case we only have that one I'll roll with It like that.
