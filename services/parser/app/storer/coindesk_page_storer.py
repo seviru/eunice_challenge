@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from app import BasePage
 from app.storer import PageStorerInterface
+from logger import logger
 
 
 class ConnectionInfo(BaseModel):
@@ -45,3 +46,9 @@ class CoindeskPageStorer(PageStorerInterface):
                         page.tags
                     )
                 )
+
+                # Check if anything got inserted
+                if cursor.rowcount:
+                    logger.info("Page information stored successfully.", extra={"url": str(page.url)})
+                else:
+                    logger.info("Page information already stored previously. Skipping", extra={"url": str(page.url)})

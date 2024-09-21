@@ -8,6 +8,8 @@ from app.url_retriever import UrlRetrieverInterface
 
 from typing import TypedDict
 
+from logger import logger
+
 
 class ImageSource(TypedDict):
     webp: str
@@ -63,9 +65,17 @@ class LastCoindeskArticlesRetriever(UrlRetrieverInterface):
         current_pages_tried = 0
         news = None
 
+        logger.info(
+            "Retrieving Coindesk articles matching search criteria",
+            extra={
+                "number_of_articles": self.number_of_articles,
+                "categories_excluded": self.exclude_categories
+            }
+        )
+
         while len(urls) < self.number_of_articles and current_pages_tried < self.max_pages_tried:
             current_pages_tried += 1
-            # TODO: Maybe use a factory with a DTO instead of accessing dictionary fields
+            # TODO: Create a DTO to contain the response instead of accessing dictioanry fields
             news: list[News] | None = self.coindesk_client.send(
                 CoindeskLatestNews(
                     page=current_pages_tried
@@ -74,11 +84,16 @@ class LastCoindeskArticlesRetriever(UrlRetrieverInterface):
 
             if news:
                 for i, article in enumerate(news):
+                    url = f"{self.COINDESK_URL}{article['url']}"
                     if article["category"].lower() not in self.exclude_categories:
-                        url = f"{self.COINDESK_URL}{article['url']}"
+                        logger.debug("Article matching criteria found", extra={"url": url})
                         urls.append(url)
 
                         if len(urls) >= self.number_of_articles:
                             break
+                    else:
+                        logger.debug("Article not matching criteria found", extra={"url": url})
+
+        logger.info("Articles found for search parameters", extra={"amount": len(urls)})
 
         return urls

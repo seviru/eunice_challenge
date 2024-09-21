@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime
 
 import pytz
@@ -9,10 +8,13 @@ from bs4 import BeautifulSoup
 
 from app import BasePage
 from app.extractor import PageExtractorInterface
+from logger import logger
 
 
 class CoindeskExtractor(PageExtractorInterface):
     def extract_page_info(self, url: HttpUrl) -> BasePage:
+        logger.info("Retrieving article information from url", extra={"url": str(url)})
+
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -22,6 +24,17 @@ class CoindeskExtractor(PageExtractorInterface):
         published_at = self._extract_publishing_date(soup)
         content = self._extract_content(soup)
         tags = self._extract_tags(soup)
+
+        logger.debug(
+            "Article information retrieved",
+            extra={
+                "title": title,
+                "author": author,
+                "published_at": published_at.strftime("%m-%d-%Y %H:%M:%S"),
+                "content": content,
+                "tags": tags
+            }
+        )
 
         return BasePage(
             title=title,

@@ -19,3 +19,8 @@ since It is what is returned from the backend (or at least I didn't catch the AP
 - Even though I could have used something like SQLAlchemy for handling the database models, and more in depth building
 with psycopg2 to make service-wide connector and so on, since I'm only will be having 3 touch points to the database
 (write the article, retrieve a particular one and retrieve all) I decided for the sake of simplicity just do It case-based.
+- For the given moment, I've decided to skip all concurrency handling with locks and so on, since It adds complexity and
+I don't see much of a point for this use case. Also, if I went with my ideal approach which would be throwing jobs in a
+queue that happen sequentially I feel like a lot of these issues wouldn't be even a concern.
+- Currently the logger writes to a file in case you want to check It out for reviewing this exerciese. For a prod environment
+I would use rotating files, or just plain skip this if we have our logs stored by some commercial app like Datadog or so.

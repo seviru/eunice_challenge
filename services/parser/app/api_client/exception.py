@@ -1,6 +1,7 @@
 class RequestException(Exception):
     def __init__(self, status_code: int, headers: str, method: str, uri: str, response_body: str):
-        super().__init__("An error occurred while sending a request.")
+        super().__init__("An error occurred while sending request.")
+
         self.status_code = status_code
         self.headers = headers
         self.method = method
@@ -16,3 +17,6 @@ class RequestException(Exception):
             f"Response headers: {self.headers}. "
             f"Response body: {self.response_body}."
         )
+
+class CoindeskRequestException(RequestException):
+    pass

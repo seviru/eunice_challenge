@@ -3,7 +3,9 @@ import os
 import requests
 
 from app.api_client import BaseClient
+from app.api_client.exception import RequestException, CoindeskRequestException
 from app.api_resource import SendableResource
+from logger import logger
 
 
 class CoindeskClient(BaseClient):
@@ -21,4 +23,13 @@ class CoindeskClient(BaseClient):
 
         response = requests.request(method, url, json=payload)
 
-        return self._handle_response(response)
+        try:
+            logger.debug("Executing request to Coindesk API")
+            handled_response = self._handle_response(response)
+            logger.debug("Successful request to Coindesk API")
+
+        except RequestException as e:
+            logger.warning("Error while processing request to Coindesk API")
+            raise CoindeskRequestException from e
+
+        return handled_response
