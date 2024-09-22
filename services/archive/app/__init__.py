@@ -3,6 +3,7 @@ from typing import Callable
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
+from fastapi.routing import APIRoute
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -14,6 +15,9 @@ api = FastAPI()
 from app.articles.entrypoint.rest import articles_router
 api.include_router(articles_router)
 
+for route in api.routes:
+    if isinstance(route, APIRoute):
+        logger.debug("Loaded route on the app.", extra={"route": route})
 
 @api.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
@@ -49,3 +53,4 @@ async def logging_middleware(request: Request, call_next: Callable) -> Response:
         )
 
     return response
+

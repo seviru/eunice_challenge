@@ -18,5 +18,14 @@ class RequestException(Exception):
             f"Response body: {self.response_body}."
         )
 
+
 class CoindeskRequestException(RequestException):
-    pass
+    @classmethod
+    def from_request_exception(cls, e):
+        return cls(
+            status_code=e.status_code,
+            headers=e.headers,
+            method=e.method,
+            uri=e.uri,
+            response_body=e.response_body
+        )

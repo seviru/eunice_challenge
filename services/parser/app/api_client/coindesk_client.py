@@ -20,6 +20,7 @@ class CoindeskClient(BaseClient):
         method = resource.get_method()
         payload = resource.get_payload()
         url = f"{self._coindesk_base_api_url}{resource.get_action()}"
+        logger.info(f"URL: {url}")
 
         response = requests.request(method, url, json=payload)
 
@@ -30,6 +31,6 @@ class CoindeskClient(BaseClient):
 
         except RequestException as e:
             logger.warning("Error while processing request to Coindesk API")
-            raise CoindeskRequestException from e
+            raise CoindeskRequestException.from_request_exception(e) from e
 
         return handled_response

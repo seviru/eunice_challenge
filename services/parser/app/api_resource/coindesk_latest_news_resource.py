@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlencode
 
 from app.api_resource import SendableResource
@@ -15,7 +16,7 @@ class CoindeskLatestNews(SendableResource):
             format: str = "timeline"
     ):
         self.language = language
-        self.format = format,
+        self.format = format  # Removed comma here
         self.size = size
         self.page = page
 
@@ -29,5 +30,6 @@ class CoindeskLatestNews(SendableResource):
             "size": self.size,
             "page": self.page,
         }
-        query = urlencode(params)
-        return f"{self.ACTION}?{query}"
+        json_query = json.dumps(params)
+        action_url = f"{self.ACTION}?query={json_query}"
+        return action_url

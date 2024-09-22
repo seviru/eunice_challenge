@@ -3,6 +3,7 @@ import os
 from pydantic import HttpUrl
 
 from app.api_client import CoindeskClient
+from app.api_client.exception import CoindeskRequestException
 from app.api_resource import CoindeskLatestNews
 from app.url_retriever import UrlRetrieverInterface
 
@@ -49,7 +50,6 @@ class LastCoindeskArticlesRetriever(UrlRetrieverInterface):
                  number_of_articles: int,
                  exclude_categories: list[str] | None = None,
                  coindesk_api_client: CoindeskClient = CoindeskClient(),
-                 max_pages_tried: int = 100,
                  ):
         self.number_of_articles = number_of_articles
         self.exclude_categories = [
@@ -57,13 +57,10 @@ class LastCoindeskArticlesRetriever(UrlRetrieverInterface):
             exclude_categories
         ] if exclude_categories is not None else []
         self.coindesk_client = coindesk_api_client
-        self.max_pages_tried = max_pages_tried
 
     def retrieve_urls(self) -> list[HttpUrl]:
-        """"""
         urls = []
         current_pages_tried = 0
-        news = None
 
         logger.info(
             "Retrieving Coindesk articles matching search criteria",
@@ -72,15 +69,18 @@ class LastCoindeskArticlesRetriever(UrlRetrieverInterface):
                 "categories_excluded": self.exclude_categories
             }
         )
-
-        while len(urls) < self.number_of_articles and current_pages_tried < self.max_pages_tried:
+        while len(urls) < self.number_of_articles:
             current_pages_tried += 1
-            # TODO: Create a DTO to contain the response instead of accessing dictioanry fields
-            news: list[News] | None = self.coindesk_client.send(
-                CoindeskLatestNews(
-                    page=current_pages_tried
-                )
-            )["items"]
+            try:
+                # TODO: Create a DTO to contain the response instead of accessing dictionary fields
+                news: list[News] | None = self.coindesk_client.send(
+                    CoindeskLatestNews(
+                        page=current_pages_tried
+                    )
+                )["items"]
+            except CoindeskRequestException as e:
+                logger.warning("Error while trying request. Processing current stored URLs.", extra={"exception": str(e)})
+                break
 
             if news:
                 for i, article in enumerate(news):
@@ -93,7 +93,10 @@ class LastCoindeskArticlesRetriever(UrlRetrieverInterface):
                             break
                     else:
                         logger.debug("Article not matching criteria found", extra={"url": url})
-
+        logger.debug(
+            f"Number of articles {self.number_of_articles} /// current {len(urls)} /// page tried {current_pages_tried}"
+        )
         logger.info("Articles found for search parameters", extra={"amount": len(urls)})
+        logger.info("Urls retrieved", extra={"urls": urls})
 
         return urls
